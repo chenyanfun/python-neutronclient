@@ -427,6 +427,8 @@ class Client(ClientBase):
     firewall_path = "/fw/firewalls/%s"
     net_partitions_path = "/net-partitions"
     net_partition_path = "/net-partitions/%s"
+    portmappings_path = "/portmappings"
+    portmapping_path = "/portmappings/%"
 
     # API has no way to report plurals, so we have to hard code them
     EXTED_PLURALS = {'routers': 'router',
@@ -458,6 +460,7 @@ class Client(ClientBase):
                      'lbaas_healthmonitors': 'lbaas_healthmonitor',
                      'lbaas_members': 'lbaas_member',
                      'healthmonitors': 'healthmonitor',
+                     'portmappings': 'portmapping',
                      }
 
     @APIParamsCall
@@ -1599,6 +1602,32 @@ class Client(ClientBase):
     def delete_packet_filter(self, packet_filter_id):
         """Delete the specified packet filter."""
         return self.delete(self.packet_filter_path % packet_filter_id)
+
+    @APIParamsCall
+    def create_portmapping(self, body=None):
+        """Create a new portmapping."""
+        return self.post(self.portmappings_path, body=body)
+
+    @APIParamsCall
+    def list_portmappings(self, **_params):
+        """List portmappings."""
+        return self.get(self.portmappings_path, params=_params)
+
+    @APIParamsCall
+    def show_portmapping(self, portmapping, **_params):
+        """Show a portmapping information."""
+        return self.get(self.portmapping_path % (portmapping),
+                        params=_params)
+
+    @APIParamsCall
+    def update_portmapping(self, portmapping, body=None):
+        """Update a portmapping."""
+        return self.put(self.portmapping_path % (portmapping), body=body)
+
+    @APIParamsCall
+    def delete_portmapping(self, portmapping):
+        """Delete the specified portmapping."""
+        return self.delete(self.portmapping_path % (portmapping))
 
     def __init__(self, **kwargs):
         """Initialize a new client for the Neutron v2.0 API."""
